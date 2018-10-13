@@ -1,10 +1,8 @@
 <template>
   <div id="editor">
-    <textarea
-      :value="compiledMarkdown"
-      @input="update">
+    <textarea v-model="content">
     </textarea>
-    <div v-html="compiledMarkdown"></div>
+    <div v-html="htmlRender"/>
   </div>
 </template>
 
@@ -15,6 +13,7 @@ html, body, #editor {
   width: 100%;
   font-family: 'Helvetica Neue', Arial, sans-serif;
   color: #333;
+  display: flex;
 }
 
 textarea, #editor div {
@@ -23,7 +22,7 @@ textarea, #editor div {
   height: 100%;
   vertical-align: top;
   box-sizing: border-box;
-  padding: 0 20px;
+  padding: 20px;
 }
 
 textarea {
@@ -44,25 +43,33 @@ code {
 
 <script>
 import marked from 'marked';
-import _ from 'lodash';
 
 export default {
-  name: 'editor',
-  data() {
-    return {
-      input: '# hello',
-    };
-  },
   computed: {
-    compiledMarkdown: () => {
-      console.log(this.input);
-      return marked(this.input || '', { sanitize: true });
+    content: {
+      get() {
+        return this.$store.state.currentNote.content;
+      },
+      set(newContent) {
+        this.$store.dispatch('SET_CONTENT', newContent);
+      },
     },
   },
-  methods: {
-    update: _.debounce((e) => {
-      this.input = e.target.value;
-    }, 300),
+  data() {
+    return {
+      htmlRender: '',
+    };
+  },
+  watch: {
+    content: {
+      handler(newContent) {
+        this.htmlRender = marked(newContent, {
+          gfm: true,
+          breaks: true,
+        });
+      },
+      immediate: true,
+    },
   },
 };
 </script>

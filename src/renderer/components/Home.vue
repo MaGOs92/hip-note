@@ -16,45 +16,31 @@
             <em><small>&mdash; John Leider</small></em>
           </div>
         </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn primary flat router to="/inspire">Continue</v-btn>
-        </v-card-actions>
       </v-card>
     </v-flex>
-    <v-flex xs10 class="mt-4">
-      <system-information></system-information>
-    </v-flex>
-    <v-flex xs10 class="mt-4">
-      <v-card>
-        <v-card-title class="headline">Docs</v-card-title>
-        <v-divider></v-divider>
-        <v-card-actions class="pt-3 pb-3">
-          <v-spacer></v-spacer>
-          <v-btn class="link-btn" @click="open('https://vuejs.org/v2/guide/')">Vue</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn class="link-btn" @click="open('https://electron.atom.io/docs/')">Electron</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn class="link-btn" @click="open('https://vuetifyjs.com')">Vuetify</v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
-    </v-flex>
+    <v-btn
+      fab
+      dark
+      color="primary"
+      fixed
+      bottom
+      right
+      @click="navigate('/editor')">
+      <v-icon dark>add</v-icon>
+    </v-btn>
   </v-layout>
 </template>
 
 <script>
-  import SystemInformation from './WelcomeView/SystemInformation';
-
-  export default {
-    name: 'welcome',
-    components: { SystemInformation },
-    methods: {
-      open(link) {
-        this.$electron.shell.openExternal(link);
-      },
+import CommonMixins from './../mixins/commonMixins';
+export default {
+  mixins: [CommonMixins],
+  methods: {
+    open(link) {
+      this.$electron.shell.openExternal(link);
     },
-  };
+  },
+};
 </script>
 
 <style scoped>
