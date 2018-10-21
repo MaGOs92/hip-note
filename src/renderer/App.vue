@@ -1,22 +1,30 @@
 <template>
   <div id="app">
     <v-app>
-      <v-toolbar v-if="isEditMode" fixed app>
-      <v-btn
-        small
-        fab
-        class="elevation-0"
-        @click="navigate('/')">
-        <v-icon>chevron_left</v-icon>
-      </v-btn>
+      <v-toolbar 
+        v-if="isEditMode && isDocumentLoaded" 
+        fixed 
+        app>
+        <v-btn
+          small
+          fab
+          class="elevation-0"
+          @click="navigate('/')">
+          <v-icon>chevron_left</v-icon>
+        </v-btn>
         <v-toolbar-title>
-          <v-text-field v-model="title" />
+          <v-text-field v-model="documentTitle" />
         </v-toolbar-title>
+        <v-spacer />
+        <v-icon :disabled="!isDocumentSaved">saved</v-icon>
       </v-toolbar>
       <v-content>
-        <v-container class="no-padding" fluid fill-height>
+        <v-container 
+          class="no-padding" 
+          fluid 
+          fill-height>
           <v-slide-y-transition mode="out-in">
-            <router-view></router-view>
+            <router-view/>
           </v-slide-y-transition>
         </v-container>
       </v-content>
@@ -29,16 +37,25 @@ import CommonMixins from './mixins/commonMixins';
 export default {
   mixins: [CommonMixins],
   computed: {
-    title: {
+    documentTitle: {
       get() {
-        return this.$store.state.currentNote.title;
+        return this.$store.state.document.curDocument.title;
       },
-      set(newTitle) {
-        this.$store.dispatch('SET_TITLE', newTitle);
-      },
+      set(title) {
+        this.$store.dispatch('SAVE_DOCUMENT', {
+          ...this.$store.state.document.curDocument,
+          title,
+        });
+      }
     },
     isEditMode() {
       return this.$route.path === '/editor';
+    },
+    isDocumentLoaded() {
+      return this.$store.state.document.isLoaded;
+    },
+    isDocumentSaved() {
+      return this.$store.state.document.isSaved;
     },
   },
 };

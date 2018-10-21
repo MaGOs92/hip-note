@@ -1,7 +1,6 @@
 <template>
   <div id="editor">
-    <textarea v-model="content">
-    </textarea>
+    <textarea v-model="documentContent"/>
     <div v-html="htmlRender"/>
   </div>
 </template>
@@ -45,31 +44,33 @@ code {
 import marked from 'marked';
 
 export default {
-  computed: {
-    content: {
-      get() {
-        return this.$store.state.currentNote.content;
-      },
-      set(newContent) {
-        this.$store.dispatch('SET_CONTENT', newContent);
-      },
-    },
-  },
   data() {
     return {
-      htmlRender: '',
+      htmlRender: ''
     };
   },
-  watch: {
-    content: {
-      handler(newContent) {
-        this.htmlRender = marked(newContent, {
-          gfm: true,
-          breaks: true,
-        });
+  computed: {
+    documentContent: {
+      get() {
+        return this.$store.state.document.curDocument.content;
       },
-      immediate: true,
+      set(content) {
+        this.htmlRender = marked(content);
+        this.$store.dispatch('SAVE_DOCUMENT', {
+          ...this.$store.state.document.curDocument,
+          content,
+        });
+      }
     },
   },
+  beforeMount() {
+    return this.fetchDocument();
+  },
+  methods: {
+    async fetchDocument() {
+      this.$route.query.id ? await this.$store.dispatch('GET_DOCUMENT', this.$route.query.id) : this.$store.dispatch('CREATE_DOCUMENT');
+      this.htmlRender = marked(this.documentContent);
+    }
+  }
 };
 </script>

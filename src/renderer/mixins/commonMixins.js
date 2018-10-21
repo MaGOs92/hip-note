@@ -1,7 +1,10 @@
 export default {
   methods: {
-    navigate(path) {
-      this.$router.push(path);
+    navigate(path, query) {
+      this.$router.push({
+        path,
+        query
+      });
     },
   },
 };

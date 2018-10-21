@@ -1,4 +1,6 @@
 import { app, BrowserWindow } from 'electron' // eslint-disable-line
+import StorageService from './services/storage';
+import './rpc/document';
 
 /**
  * Set `__static` path to static files in production
@@ -8,7 +10,9 @@ if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\') // eslint-disable-line
 }
 
-let mainWindow;
+export let mainWindow;
+export const storage =  new StorageService(app.getPath('appData'));
+
 const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`;
@@ -63,3 +67,4 @@ app.on('ready', () => {
   if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
 })
  */
+

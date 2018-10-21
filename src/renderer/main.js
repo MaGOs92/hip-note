@@ -7,12 +7,14 @@ import App from './App';
 import router from './router';
 import store from './store';
 
+import { dateFormated, dateRelative } from './filters/date';
+
 Vue.use(Vuetify);
-if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
+Vue.filter('dateFormated', dateFormated);
+Vue.filter('dateRelative', dateRelative);
 Vue.http = Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
 
-/* eslint-disable no-new */
 new Vue({
   components: { App },
   router,
