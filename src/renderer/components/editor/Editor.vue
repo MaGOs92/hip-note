@@ -6,6 +6,8 @@
 </template>
 
 <style scoped>
+@import '~/node_modules/highlight.js/styles/github.css';
+
 html, body, #editor {
   margin: 0;
   height: 100%;
@@ -42,6 +44,7 @@ code {
 
 <script>
 import marked from 'marked';
+import hightlight from 'highlight.js';
 
 export default {
   data() {
@@ -64,6 +67,12 @@ export default {
     },
   },
   beforeMount() {
+    marked.setOptions({
+      renderer: new marked.Renderer(),
+      highlight: code => hightlight.highlightAuto(code).value,
+      smartLists: true,
+      xhtml: true
+    });
     return this.fetchDocument();
   },
   methods: {
