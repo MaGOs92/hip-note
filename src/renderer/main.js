@@ -9,7 +9,17 @@ import store from './store';
 
 import { dateFormated, dateRelative } from './filters/date';
 
-Vue.use(Vuetify);
+const theme = {
+  primary: '#1976D2',
+  secondary: '#424242',
+  accent: '#82B1FF',
+  error: '#FF5252',
+  info: '#2196F3',
+  success: '#4CAF50',
+  warning: '#FFC107'
+}
+
+Vue.use(Vuetify, {theme});
 Vue.filter('dateFormated', dateFormated);
 Vue.filter('dateRelative', dateRelative);
 Vue.http = Vue.prototype.$http = axios;

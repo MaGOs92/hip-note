@@ -63,6 +63,7 @@
 import CommonMixins from './../mixins/commonMixins';
 
 export default {
+  name: 'Home',
   mixins: [CommonMixins],
   data() {
    return {

@@ -49,6 +49,7 @@
   },
   "dependencies": {
     "axios": "^0.16.1",
+    "codemirror": "5.41.0",
     "fs-extra": "7.0.0",
     "highlightjs": "9.12.0",
     "lodash": "^4.17.11",

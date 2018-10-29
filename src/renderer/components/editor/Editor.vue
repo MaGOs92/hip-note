@@ -1,14 +1,33 @@
 <template>
   <div id="editor">
-    <textarea v-model="documentContent"/>
-    <div v-html="htmlRender"/>
+    <textarea
+      ref="editor"
+      v-model="documentContent"
+      :class="{'no-display': isFullwidth}"
+      class="editor"/>
+    <div
+      :class="{'full-width': isFullwidth}"
+      class="render">
+      <template v-for="(component, index) in components">
+        <div
+          v-if="component.html"
+          :key="index"
+          v-html="component.html" />
+        <component
+          v-else
+          :key="index"
+          :is="component.name"
+          v-bind="component.props" />
+      </template>
+    </div>
   </div>
 </template>
 
 <style scoped>
+@import '~/node_modules/codemirror/lib/codemirror.css';
 @import '~/node_modules/highlight.js/styles/github.css';
 
-html, body, #editor {
+#editor {
   margin: 0;
   height: 100%;
   width: 100%;
@@ -17,7 +36,7 @@ html, body, #editor {
   display: flex;
 }
 
-textarea, #editor div {
+.render {
   display: inline-block;
   width: 50%;
   height: 100%;
@@ -26,7 +45,7 @@ textarea, #editor div {
   padding: 20px;
 }
 
-textarea {
+.editor {
   border: none;
   border-right: 1px solid #ccc;
   resize: none;
@@ -35,21 +54,32 @@ textarea {
   font-size: 14px;
   font-family: 'Monaco', courier, monospace;
   padding: 20px;
+  width: 50%;
 }
 
-code {
-  color: #f66;
+.full-width {
+  width: 100%;
 }
+
+.no-display {
+  display: none;
+}
+
 </style>
 
 <script>
-import marked from 'marked';
-import hightlight from 'highlight.js';
+import ContentParser from './content-parser';
+import CodeMirror from 'codemirror';
+import CvHeader from './components/cv-header';
 
 export default {
+  name: 'Editor',
+  components: {
+    CvHeader
+  },
   data() {
     return {
-      htmlRender: ''
+      components: []
     };
   },
   computed: {
@@ -58,27 +88,29 @@ export default {
         return this.$store.state.document.curDocument.content;
       },
       set(content) {
-        this.htmlRender = marked(content);
         this.$store.dispatch('SAVE_DOCUMENT', {
           ...this.$store.state.document.curDocument,
           content,
         });
+        this.contentParser.processContent(content).then(processedArray => this.components = processedArray);
       }
     },
+    isFullwidth() {
+      return this.$store.state.editor.fullWidth;
+    }
   },
   beforeMount() {
-    marked.setOptions({
-      renderer: new marked.Renderer(),
-      highlight: code => hightlight.highlightAuto(code).value,
-      smartLists: true,
-      xhtml: true
-    });
+    this.contentParser = new ContentParser(500);
     return this.fetchDocument();
+  },
+  mounted() {
+
   },
   methods: {
     async fetchDocument() {
       this.$route.query.id ? await this.$store.dispatch('GET_DOCUMENT', this.$route.query.id) : this.$store.dispatch('CREATE_DOCUMENT');
-      this.htmlRender = marked(this.documentContent);
+      this.contentParser.processContent(this.documentContent).then(processedArray => this.components = processedArray);
+
     }
   }
 };

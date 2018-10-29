@@ -7,12 +7,12 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
+      name: 'Home',
       component: require('@/components/Home').default,
     },
     {
       path: '/editor',
-      name: 'editor',
+      name: 'Editor',
       component: require('@/components/editor/Editor').default,
     },
     {

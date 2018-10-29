@@ -17,6 +17,13 @@
         </v-toolbar-title>
         <v-spacer />
         <v-icon :disabled="!isDocumentSaved">saved</v-icon>
+        <v-btn
+          small
+          fab
+          class="elevation-0"
+          @click="toggleFullwidth">
+          <v-icon>{{ fullWidthIcon }}</v-icon>
+        </v-btn>
       </v-toolbar>
       <v-content>
         <v-container 
@@ -57,7 +64,15 @@ export default {
     isDocumentSaved() {
       return this.$store.state.document.isSaved;
     },
+    fullWidthIcon() {
+      return this.$store.state.editor.fullWidth ? 'fullscreen_exit' : 'fullscreen';
+    }
   },
+  methods: {
+    toggleFullwidth() {
+      this.$store.dispatch('SET_FULLWIDTH', !this.$store.state.editor.fullWidth);
+    }
+  }
 };
 </script>
 
