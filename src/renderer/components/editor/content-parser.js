@@ -1,12 +1,10 @@
 import marked from 'marked';
 import hightlight from 'highlight.js';
-
-const editorComponents = ['cv-header', 'cv-footer', 'cv-page'];
+import components from './components';
 
 export default class {
 
-  constructor(delay) {
-    this.delay = delay;
+  constructor() {
     this.timeout = null;
     this.componentsArray = [];
     marked.setOptions({
@@ -17,8 +15,9 @@ export default class {
     });
   }
 
-  processContent(content) {
+  processContent(content, delay) {
     this.content = content;
+    this.delay = delay || 500;
     return new Promise(resolve => {
       if (this.timeout) {
         clearInterval(this.timeout);
@@ -37,19 +36,17 @@ export default class {
   }
 
   parseContent() {
-    this.componentsArray =  editorComponents.reduce((acc, cur) => {
-      if (editorComponents.includes(cur)) {
-        let resArray;
-        const re = new RegExp('--' + cur + '(\n@([a-zA-Z]+)="(.*)")*', 'g');
-        while ((resArray = re.exec(this.content)) !== null) {
-          acc.push({
-            name: cur,
-            str: resArray[0],
-            index: resArray.index,
-            lastIndex: resArray.index + resArray[0].length,
-            hasProps: resArray[1]
-          });
-        }
+    this.componentsArray =  Object.keys(components).reduce((acc, cur) => {
+      let resArray;
+      const re = new RegExp('--' + cur + '(\n@([a-zA-Z]+)=\'(.*)\')*', 'g');
+      while ((resArray = re.exec(this.content)) !== null) {
+        acc.push({
+          name: cur,
+          str: resArray[0],
+          index: resArray.index,
+          lastIndex: resArray.index + resArray[0].length,
+          hasProps: resArray[1]
+        });
       }
       return acc;
     }, []);
@@ -60,7 +57,7 @@ export default class {
     this.componentsArray = this.componentsArray.map(cmp => {
       if (cmp.hasProps) {
         const props = {};
-        const propsRe = /@([a-zA-Z]+)="(.*)"/g;
+        const propsRe = /@([a-zA-Z]+)='(.*)'/g;
         let res;
         while ((res = propsRe.exec(cmp.str)) !== null) {
           props[res[1]] = res[2];

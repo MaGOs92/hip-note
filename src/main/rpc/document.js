@@ -3,11 +3,16 @@ import { ipcMain } from 'electron';
 import * as config from '../config.json';
 
 
-const saveDocument = document => {
+const saveDocument = async document => {
+  const oldDocument = await loadDocument(document.id);
+  const documentToSave = {
+    ...oldDocument,
+    ...document
+  };
   return storage.writeJson({
     file: document.id + '.json',
     folder: config.sub_folders.DOCUMENTS,
-    data: document
+    data: documentToSave
   })
 };
 
@@ -28,13 +33,14 @@ const listAllDocuments = () => {
       folder: config.sub_folders.DOCUMENTS
     })))
   })
-  .then(allDocuments => allDocuments.map(({id, type, title, created, lastModified}) => {
+  .then(allDocuments => allDocuments.map(({id, title, created, lastModified, isFav, deleted}) => {
     return {
       id,
-      type,
       title,
       created,
-      lastModified
+      lastModified,
+      isFav,
+      deleted
     };
   }));
 };

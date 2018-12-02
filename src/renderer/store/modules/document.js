@@ -40,7 +40,6 @@ const actions = {
   },
   async SAVE_DOCUMENT({ commit }, document) {
     commit('setIsSaved', false);
-    document.lastModified = new Date();
     commit('setCurDocument', document);
     try {
       await debouncer.debounce(save, document);
@@ -67,6 +66,11 @@ const actions = {
     } catch (err) {
       console.error('Erreur lors de la lecture du document', err);
     }
+  },
+  async UPDATE_ALL_DOCUMENTS({ commit, state }, document) {
+    const allDocumentsUpdated = [...state.allDocuments];
+    allDocumentsUpdated.splice(state.allDocuments.findIndex(doc => doc.id === document.id), 1, document);
+    commit('setAllDocuments', allDocumentsUpdated);
   },
 };
 

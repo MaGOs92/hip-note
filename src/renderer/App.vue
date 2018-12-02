@@ -51,6 +51,7 @@ export default {
       set(title) {
         this.$store.dispatch('SAVE_DOCUMENT', {
           ...this.$store.state.document.curDocument,
+          lastModified: new Date(),
           title,
         });
       }

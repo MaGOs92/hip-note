@@ -33,9 +33,14 @@
               class="data-table-line"
               @click="navigate('/editor', {id: props.item.id})">
               <td>{{ props.item.title }}</td>
-              <td>{{ props.item.type }}</td>
               <td>{{ props.item.created | dateFormated }}</td>
               <td>{{ props.item.lastModified | dateRelative }}</td>
+              <td>
+                <v-icon @click="toggleFav($event, props.item)">{{ props.item.isFav | favIcon }}</v-icon>
+              </td>
+              <td>
+                <v-icon @click="deleteDocument($event, props.item)">delete</v-icon>
+              </td>
             </tr>
           </template>
           <div
@@ -64,28 +69,38 @@ import CommonMixins from './../mixins/commonMixins';
 
 export default {
   name: 'Home',
+  filters: {
+    favIcon(isFav) {
+      return isFav ? 'star' : 'star_border';
+    }
+  },
   mixins: [CommonMixins],
   data() {
    return {
       headers: [
         {
           text: 'Titre',
-          align: 'left',
-          value: 'title'
-        },
-        {
-          text: 'Type',
-          value: 'type',
+          value: 'title',
           align: 'left'
         },
         {
-          text: 'Date de création',
+          text: 'Création',
           value: 'created',
           align: 'left'
         },
         {
-          text: 'Date de dernière modification',
+          text: 'Dernière modification',
           value: 'lastModified',
+          align: 'left'
+        },
+        {
+          text: 'Favori',
+          value: 'isFav',
+          align: 'left'
+        },
+        {
+          text: 'Actions',
+          value: 'actions',
           align: 'left'
         },
       ],
@@ -95,7 +110,7 @@ export default {
   },
   computed: {
     documents() {
-      return this.$store.state.document.allDocuments;
+      return this.$store.state.document.allDocuments.filter(document => !document.deleted);
     }
   },
   beforeMount() {
@@ -106,6 +121,24 @@ export default {
       this.isLoading = true;
       await this.$store.dispatch('LIST_ALL_DOCUMENTS');
       this.isLoading = false;
+    },
+    toggleFav(event, document) {
+      event.stopPropagation();
+      const newDocument = {
+        ...document,
+        isFav: !document.isFav
+      };
+      this.$store.dispatch('UPDATE_ALL_DOCUMENTS', newDocument);      
+      this.$store.dispatch('SAVE_DOCUMENT', newDocument);
+    },
+    deleteDocument(event, document) {
+      event.stopPropagation();
+      const newDocument = {
+        ...document,
+        deleted: true
+      };
+      this.$store.dispatch('UPDATE_ALL_DOCUMENTS', newDocument);      
+      this.$store.dispatch('SAVE_DOCUMENT', newDocument);
     }
   }
 };

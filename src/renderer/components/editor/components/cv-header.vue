@@ -4,12 +4,23 @@
     <div class="cv-header-inner1 primary">
       <h1>{{ name }}</h1>
       <h3>{{ experience }}</h3>
+      <img
+        v-if="photo"
+        :src="photo"
+        class="cv-photo"
+        alt="Portrait CV">
     </div>
     <div class="cv-header-inner2 secondary">
-      <h2>{{ position }}</h2>
-      <h4><v-icon>email</v-icon>{{ email }}</h4>
-      <h4><v-icon>phone</v-icon>{{ phone }}</h4>
-      <h4>{{ portfolio }}</h4>
+      <h2 class="cv-position">{{ position }}</h2>
+      <h4><v-icon
+        small
+        class="cv-icon">email</v-icon>{{ email }}</h4>
+      <h4><v-icon
+        small
+        class="cv-icon">phone</v-icon>{{ phone }}</h4>
+      <h4><v-icon
+        small
+        class="cv-icon">book</v-icon>{{ portfolio }}</h4>
     </div>
   </div>
 </template>
@@ -25,16 +36,28 @@
   align-items: center;
   height: 75px;
   padding: 20px;
-  margin: -20px -20px 0 -20px;
 }
 .cv-header-inner2 {
   color: white;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   padding: 20px;
-  margin: 0 -20px 0 -20px;
+}
+.cv-icon {
+  color: white;
+  margin-right: 10px;
+}
+.cv-photo {
+  width: 150px;
+  height: 150px;
+  margin-top: 100px;
+  border: 2px solid white;
+  border-radius: 50%;
+}
+.cv-position {
+  margin-bottom: 5px;
 }
 </style>
 
@@ -67,6 +90,11 @@ export default {
       default: ''
     },
     portfolio: {
+      required: false,
+      type: String,
+      default: ''
+    },
+    photo: {
       required: false,
       type: String,
       default: ''

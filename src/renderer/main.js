@@ -8,6 +8,7 @@ import router from './router';
 import store from './store';
 
 import { dateFormated, dateRelative } from './filters/date';
+import { markedDown } from './filters/marked';
 
 const theme = {
   primary: '#1976D2',
@@ -22,6 +23,7 @@ const theme = {
 Vue.use(Vuetify, {theme});
 Vue.filter('dateFormated', dateFormated);
 Vue.filter('dateRelative', dateRelative);
+Vue.filter('marked', markedDown);
 Vue.http = Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
 
