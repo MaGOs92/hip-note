@@ -4,7 +4,12 @@ import * as config from '../config.json';
 
 
 const saveDocument = async document => {
-  const oldDocument = await loadDocument(document.id);
+  let oldDocument = {};
+  try {
+    oldDocument = await loadDocument(document.id);
+  } catch (err) {
+    console.log('Nouveau document : ' + document.id)
+  }
   const documentToSave = {
     ...oldDocument,
     ...document
