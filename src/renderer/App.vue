@@ -3,6 +3,7 @@
     <v-app>
       <v-toolbar 
         v-if="isEditMode && isDocumentLoaded" 
+        class="app-toolbar"
         fixed 
         app>
         <v-btn
@@ -13,7 +14,8 @@
           <v-icon>chevron_left</v-icon>
         </v-btn>
         <v-toolbar-title>
-          <v-text-field v-model="documentTitle" />
+          <v-text-field
+            v-model="documentTitle"/>
         </v-toolbar-title>
         <v-spacer />
         <v-icon :disabled="!isDocumentSaved">saved</v-icon>
@@ -23,6 +25,14 @@
           class="elevation-0"
           @click="toggleFullwidth">
           <v-icon>{{ fullWidthIcon }}</v-icon>
+        </v-btn>
+        <v-btn
+          :disabled="!canExport"
+          small
+          fab
+          class="elevation-0"
+          @click="exportToPDF">
+          <v-icon>launch</v-icon>
         </v-btn>
       </v-toolbar>
       <v-content>
@@ -41,6 +51,7 @@
 
 <script>
 import CommonMixins from './mixins/commonMixins';
+
 export default {
   mixins: [CommonMixins],
   computed: {
@@ -65,6 +76,9 @@ export default {
     isDocumentSaved() {
       return this.$store.state.document.isSaved;
     },
+    canExport() {
+      return !this.$store.state.editor.isExporting;
+    },
     fullWidthIcon() {
       return this.$store.state.editor.fullWidth ? 'fullscreen_exit' : 'fullscreen';
     }
@@ -72,17 +86,30 @@ export default {
   methods: {
     toggleFullwidth() {
       this.$store.dispatch('SET_FULLWIDTH', !this.$store.state.editor.fullWidth);
+    },
+    exportToPDF() {
+      const element = document.getElementById('editor-renderer');
+      const html = element.outerHTML;
+      this.$store.dispatch('EXPORT_TO_PDF', {
+        title: this.documentTitle,
+        html
+      });
     }
   }
 };
 </script>
 
 <style>
-  @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons');
-  .no-padding {
-    padding: 0;
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons');
+.no-padding {
+  padding: 0;
+}
+.footer-border {
+  border-top: 1px
+}
+@media print {
+  .app-toolbar {
+    display: none;
   }
-  .footer-border {
-    border-top: 1px
-  }
+}
 </style>

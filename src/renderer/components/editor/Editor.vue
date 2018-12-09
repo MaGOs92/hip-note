@@ -6,8 +6,10 @@
       :class="{'no-display': isFullwidth}"
       class="editor"/>
     <div
-      :class="{'full-width': isFullwidth}"
-      class="render">
+      id="editor-renderer"
+      :class="{
+        'full-width': isFullwidth,
+        'half-width': !isFullwidth}">
       <template v-for="(component, index) in components">
         <div
           v-if="component.html"
@@ -37,8 +39,7 @@
   display: flex;
 }
 
-.render {
-  width: 50%;
+#editor-renderer {
   height: 100%;
   position: relative;
 }
@@ -59,12 +60,26 @@
   width: 100%;
 }
 
+.half-width {
+  width: 50%;
+}
+
 .no-display {
   display: none;
 }
 
 .markedown-div {
   padding: 20px;
+}
+
+@media print {
+  #editor-renderer {
+    margin-top: -56px;
+    width: 100%;
+  }
+  .editor {
+    display: none;
+  }
 }
 
 </style>

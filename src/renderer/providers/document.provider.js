@@ -1,20 +1,4 @@
-import shortid from 'shortid';
-import { ipcRenderer } from 'electron';
-
-const ipcMessage = (message) => {
-  message.id = shortid.generate();
-  return new Promise((resolve, reject) => {
-    ipcRenderer.send(message.name, message);
-    ipcRenderer.on(message.name, (event, data) => {
-      if (data.id === message.id) {
-        resolve(data);
-      }
-    });
-    setTimeout(() => {
-      reject('Timeout error : ', message);
-    }, 500);
-  });
-};
+import { ipcMessage } from './utils';
 
 export const save = document => ipcMessage({
   name: 'save',

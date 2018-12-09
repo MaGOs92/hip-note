@@ -71,7 +71,7 @@ const actions = {
     const allDocumentsUpdated = [...state.allDocuments];
     allDocumentsUpdated.splice(state.allDocuments.findIndex(doc => doc.id === document.id), 1, document);
     commit('setAllDocuments', allDocumentsUpdated);
-  },
+  }
 };
 
 export default {

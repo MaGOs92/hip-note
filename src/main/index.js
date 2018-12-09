@@ -2,6 +2,7 @@ import { app, BrowserWindow, Menu } from 'electron';
 import menuTemplate from './menu';
 import StorageService from './services/storage';
 import './rpc/document';
+import './rpc/export';
 
 /**
  * Set `__static` path to static files in production
