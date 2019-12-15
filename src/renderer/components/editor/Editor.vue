@@ -1,10 +1,14 @@
 <template>
   <div id="editor">
-    <textarea
+    <vue-ace-editor
       ref="editor"
       v-model="documentContent"
-      :class="{'no-display': isFullwidth}"
-      class="editor"/>
+      :width="isFullwidth ? '0%' : '50%'"
+      lang="markdown"
+      theme="chrome"
+      class="ace-editor-custom"
+      @init="editorInit"
+    />
     <div
       id="editor-renderer"
       :class="{
@@ -44,16 +48,9 @@
   position: relative;
 }
 
-.editor {
-  border: none;
-  border-right: 1px solid #ccc;
-  resize: none;
-  outline: none;
-  background-color: #f6f6f6;
-  font-size: 14px;
-  font-family: 'Monaco', courier, monospace;
-  padding: 20px;
-  width: 50%;
+.ace-editor-custom .ace_gutter {
+    z-index: 1;
+    background-color: #f5f5f5 !important;
 }
 
 .full-width {
@@ -88,10 +85,16 @@
 import ContentParser from './content-parser';
 import CodeMirror from 'codemirror';
 import components from './components';
+import VueAceEditor from 'vue2-ace-editor'
+import "brace/ext/language_tools";
+import "brace/mode/markdown";
+import "brace/theme/chrome";
 
 export default {
   name: 'Editor',
-  components,
+  components: {
+    VueAceEditor
+  },
   data() {
     return {
       components: []
@@ -123,6 +126,9 @@ export default {
     async fetchDocument() {
       this.$route.query.id ? await this.$store.dispatch('GET_DOCUMENT', this.$route.query.id) : this.$store.dispatch('CREATE_DOCUMENT');
       this.contentParser.processContent(this.documentContent).then(processedArray => this.components = processedArray, 0);
+    },
+    editorInit(editor) {
+      editor.getSession().setUseWrapMode(true);
     }
   }
 };

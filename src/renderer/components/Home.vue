@@ -1,56 +1,54 @@
 <template>
   <v-layout 
-    id="wrapper" 
+    id="wrapper"
+    fill-height
     row 
     wrap 
     justify-center>
-    <v-flex 
-      xs10 
-      class="mt-3">
-      <v-card>
-        <v-card-title>Mes notes
-          <v-spacer />
-          <v-text-field
-            v-model="search"
-            append-icon="search"
-            label="Search"
-            single-line
-            hide-details/>
-        </v-card-title>
-        <v-data-table
-          :headers="headers"
-          :items="documents"
-          :search="search"
-          :loading="isLoading">
-          <v-progress-linear
-            slot="progress"
-            color="blue"
-            indeterminate />
-          <template
-            slot="items"
-            slot-scope="props">
-            <tr
-              class="data-table-line"
-              @click="navigate('/editor', {id: props.item.id})">
-              <td>{{ props.item.title }}</td>
-              <td>{{ props.item.created | dateFormated }}</td>
-              <td>{{ props.item.lastModified | dateRelative }}</td>
-              <td>
-                <v-icon @click="toggleFav($event, props.item)">{{ props.item.isFav | favIcon }}</v-icon>
-              </td>
-              <td>
-                <v-icon @click="deleteDocument($event, props.item)">delete</v-icon>
-              </td>
-            </tr>
-          </template>
-          <div
-            slot="no-results"
-            :value="true">
-            Aucun résultat pour la recherche "{{ search }}".
-          </div>
-        </v-data-table>
-      </v-card>
-    </v-flex>
+    <v-card class="main-card">
+      <v-card-title>
+        <v-text-field
+          v-model="search"
+          append-icon="search"
+          label="Recherche"
+          single-line
+          hide-details/>
+      </v-card-title>
+      <v-data-table
+        :headers="headers"
+        :items="documents"
+        :search="search"
+        :loading="isLoading"
+        hide-actions
+        class="data-table">
+        <v-progress-linear
+          slot="progress"
+          color="blue"
+          indeterminate />
+        <template
+          slot="items"
+          slot-scope="props">
+          <tr
+            class="data-table-line"
+            @click="navigate('/editor', {id: props.item.id})">
+            <td>{{ props.item.title }}</td>
+            <td>{{ props.item.created | dateFormated }}</td>
+            <td>{{ props.item.lastModified | dateRelative }}</td>
+            <td>
+              <v-icon @click="toggleFav($event, props.item)">{{ props.item.isFav | favIcon }}</v-icon>
+            </td>
+            <td>
+              <v-icon @click="deleteDocument($event, props.item)">delete</v-icon>
+            </td>
+          </tr>
+        </template>
+        <div
+          slot="no-results"
+          :value="true">
+          Aucun résultat pour la recherche "{{ search }}".
+        </div>
+      </v-data-table>
+    </v-card>
     <v-btn
       fab
       dark
@@ -63,6 +61,20 @@
     </v-btn>
   </v-layout>
 </template>
+
+<style scoped>
+  .main-card {
+    width: 100%;
+  }
+  .data-table {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .data-table-line:hover {
+    cursor: pointer;
+  }
+</style>
 
 <script>
 import CommonMixins from './../mixins/commonMixins';
@@ -144,8 +156,3 @@ export default {
 };
 </script>
 
-<style scoped>
-  .data-table-line:hover {
-    cursor: pointer;
-  }
-</style>

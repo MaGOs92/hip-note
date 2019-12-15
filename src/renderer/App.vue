@@ -13,7 +13,7 @@
           @click="navigate('/')">
           <v-icon>chevron_left</v-icon>
         </v-btn>
-        <v-toolbar-title>
+        <v-toolbar-title class="toolbar-title">
           <v-text-field
             v-model="documentTitle"/>
         </v-toolbar-title>
@@ -106,6 +106,9 @@ export default {
 }
 .footer-border {
   border-top: 1px
+}
+.toolbar-title {
+  width: 500px;
 }
 @media print {
   .app-toolbar {
