@@ -1,7 +1,5 @@
-import { mainWindow, storage } from '../index';
+import { mainWindow, storageService, configurationService } from '../index';
 import { ipcMain } from 'electron';
-import * as config from '../config.json';
-
 
 const saveDocument = async document => {
   let oldDocument = {};
@@ -14,28 +12,31 @@ const saveDocument = async document => {
     ...oldDocument,
     ...document
   };
-  return storage.writeJson({
+  const folder = await configurationService.getDocumentSavePath()
+  return storageService.writeJson({
     file: document.id + '.json',
-    folder: config.sub_folders.DOCUMENTS,
+    folder,
     data: documentToSave
   })
 };
 
-const loadDocument = id => {
-  return storage.readJson({
+const loadDocument = async id => {
+  const folder = await configurationService.getDocumentSavePath()
+  return storageService.readJson({
     file: id + '.json',
-    folder: config.sub_folders.DOCUMENTS
+    folder,
   });
 };
 
-const listAllDocuments = () => {
-  return storage.readFolder({
-    folder: config.sub_folders.DOCUMENTS
+const listAllDocuments = async () => {
+  const folder = await configurationService.getDocumentSavePath()
+  return storageService.readFolder({
+    folder,
   })
   .then(allFiles => {
-    return Promise.all(allFiles.map(file => storage.readJson({
+    return Promise.all(allFiles.map(file => storageService.readJson({
       file,
-      folder: config.sub_folders.DOCUMENTS
+      folder,
     })))
   })
   .then(allDocuments => allDocuments.map(({id, title, created, lastModified, isFav, deleted}) => {

@@ -1,6 +1,7 @@
 import { app, BrowserWindow, Menu } from 'electron';
 import menuTemplate from './menu';
-import StorageService from './services/storage';
+import StorageService from './services/storage'
+import ConfigurationService from './services/configuration'
 import './rpc/document';
 import './rpc/export';
 
@@ -12,8 +13,10 @@ if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\') // eslint-disable-line
 }
 
-export let mainWindow;
-export const storage =  new StorageService(app.getPath('appData'));
+let mainWindow;
+
+const storageService = new StorageService()
+const configurationService = new ConfigurationService(app.getPath('appData'))
 
 const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'
@@ -55,3 +58,9 @@ app.on('activate', () => {
   }
 });
 
+export {
+  mainWindow,
+  app,
+  storageService,
+  configurationService,
+}
