@@ -1,6 +1,7 @@
 import { app, BrowserWindow, Menu } from 'electron';
 import menuTemplate from './menu';
-import StorageService from './services/storage';
+import StorageService from './services/storage'
+import ConfigurationService from './services/configuration'
 import './rpc/document';
 import './rpc/export';
 
@@ -12,10 +13,12 @@ if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\') // eslint-disable-line
 }
 
-export let mainWindow;
-export const storage =  new StorageService(app.getPath('appData'));
+let mainWindow;
 
-const winURL = process.env.NODE_ENV === 'development'
+const storageService = new StorageService()
+const configurationService = new ConfigurationService(app.getPath('appData'))
+
+export const rootURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`;
 
@@ -30,15 +33,13 @@ function createWindow() {
     }
   });
 
-  mainWindow.loadURL(winURL);
+  mainWindow.loadURL(rootURL);
 
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
 
-  // if (process.env.NODE_ENV === 'production') {
-    Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate));
-  // }
+  Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate));
 }
 
 app.on('ready', createWindow);
@@ -55,3 +56,9 @@ app.on('activate', () => {
   }
 });
 
+export {
+  mainWindow,
+  app,
+  storageService,
+  configurationService,
+}

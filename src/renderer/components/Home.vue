@@ -117,7 +117,7 @@ export default {
         },
       ],
       isLoading: true,
-      search: ''
+      search: '',
    } 
   },
   computed: {
@@ -140,7 +140,7 @@ export default {
         ...document,
         isFav: !document.isFav
       };
-      this.$store.dispatch('UPDATE_ALL_DOCUMENTS', newDocument);      
+      this.$store.dispatch('UPDATE_ALL_DOCUMENTS', newDocument);
       this.$store.dispatch('SAVE_DOCUMENT', newDocument);
     },
     deleteDocument(event, document) {
@@ -149,9 +149,9 @@ export default {
         ...document,
         deleted: true
       };
-      this.$store.dispatch('UPDATE_ALL_DOCUMENTS', newDocument);      
+      this.$store.dispatch('UPDATE_ALL_DOCUMENTS', newDocument);
       this.$store.dispatch('SAVE_DOCUMENT', newDocument);
-    }
+    },
   }
 };
 </script>

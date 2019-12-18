@@ -1,7 +1,10 @@
+import { openSettings } from './rpc/configuration'
+
 export default [{
   label: "Hip Note",
   submenu: [
       { label: "À propos", selector: "orderFrontStandardAboutPanel:" },
+      { label: "Préférences", accelerator: "Command+,", click: () => openSettings()},
       { type: "separator" },
       { label: "Quitter", accelerator: "Command+Q", click: () => app.quit() }
   ]}, {
