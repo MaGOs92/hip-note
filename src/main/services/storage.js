@@ -26,7 +26,7 @@ export default class {
   async readFolder({ folder }) {
     try {
       await fs.ensureDir(folder);
-      return fs.readdir(path.join(folder));
+      return fs.readdir(folder);
     }
     catch (err) {
       return Promise.reject(err);

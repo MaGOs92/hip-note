@@ -34,9 +34,11 @@ const listAllDocuments = async () => {
     folder,
   })
   .then(allFiles => {
-    return Promise.all(allFiles.map(file => storageService.readJson({
-      file,
-      folder,
+    return Promise.all(allFiles
+      .filter(file => /[\w-]{9}\.json/.test(file))
+      .map(file => storageService.readJson({
+        file,
+        folder,
     })))
   })
   .then(allDocuments => allDocuments.map(({id, title, created, lastModified, isFav, deleted}) => {
