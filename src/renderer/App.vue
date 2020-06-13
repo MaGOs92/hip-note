@@ -35,7 +35,7 @@
           <v-icon>launch</v-icon>
         </v-btn>
       </v-toolbar>
-      <v-content>
+      <v-content class="main-content">
         <v-container 
           class="no-padding" 
           fluid 
@@ -113,6 +113,9 @@ export default {
 @media print {
   .app-toolbar {
     display: none;
+  }
+  .main-content {
+    padding-top: 56px !important;
   }
 }
 </style>

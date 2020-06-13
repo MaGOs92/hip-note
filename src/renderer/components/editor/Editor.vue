@@ -93,6 +93,7 @@ import "brace/theme/chrome";
 export default {
   name: 'Editor',
   components: {
+    ...components,
     VueAceEditor
   },
   data() {

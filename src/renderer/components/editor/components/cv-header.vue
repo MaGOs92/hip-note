@@ -10,7 +10,7 @@
         class="cv-photo"
         alt="Portrait CV">
     </div>
-    <div class="cv-header-inner2 secondary">
+    <div class="cv-header-inner2">
       <h2 class="cv-position">{{ position }}</h2>
       <h4><v-icon
         small
@@ -38,15 +38,15 @@
   padding: 20px;
 }
 .cv-header-inner2 {
-  color: white;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
   padding: 20px;
+  background-color: #E5E5E5;
 }
 .cv-icon {
-  color: white;
+  color: black;
   margin-right: 10px;
 }
 .cv-photo {

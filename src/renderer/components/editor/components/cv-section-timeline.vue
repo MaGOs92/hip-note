@@ -8,8 +8,11 @@
         :key="i">
         <div class="cv-timeline-item">
           <div class="cv-timeline-item-header">
-            <h2>{{ item.title }}</h2>
-            <h3>{{ item.date }}</h3>
+            <div class="cv-timeline-item-header-title">
+              <h2>{{ item.title }}</h2>
+              <h4>{{ item.location }}</h4>
+            </div>
+            <h3 style="margin-top: 3px;">{{ item.date }}</h3>
           </div>
           <div v-html="item.text"/>
         </div>
@@ -26,11 +29,12 @@
   background-color: #E5E5E5;
   border-radius: 5px;
   padding: 10px;
+  page-break-inside: avoid;
 }
 .cv-timeline-item-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 10px;
 }
 </style>

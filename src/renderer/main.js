@@ -11,8 +11,8 @@ import { dateFormated, dateRelative } from './filters/date';
 import { markedDown } from './filters/marked';
 
 const theme = {
-  primary: '#40b341',
-  secondary: '#dedc4a',
+  primary: '#3F51B5',
+  secondary: '#2196F3',
   accent: '#82B1FF',
   error: '#FF5252',
   info: '#2196F3',
