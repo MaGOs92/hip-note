@@ -1,8 +1,8 @@
 import { app, BrowserWindow, Menu } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import menuTemplate from './menu';
-import StorageService from './services/storage'
-import ConfigurationService from './services/configuration'
+import StorageService from './services/storage';
+import ConfigurationService from './services/configuration';
 import './rpc/document';
 import './rpc/export';
 
