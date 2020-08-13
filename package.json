@@ -1,6 +1,6 @@
 {
   "name": "hip-note",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "author": "Guillaume Fay",
   "description": "Markdown editor with templates for taking notes, writing articles, generating resumes and much more!",
   "license": "MIT",
@@ -85,7 +85,7 @@
     "del": "^3.0.0",
     "devtron": "^1.4.0",
     "electron": "^1.7.5",
-    "electron-builder": "^19.19.1",
+    "electron-builder": "^21.2.0",
     "electron-debug": "^1.4.0",
     "electron-devtools-installer": "^2.2.0",
     "eslint": "^4.4.1",

@@ -1,4 +1,5 @@
 import { app, BrowserWindow, Menu } from 'electron';
+import { autoUpdater } from 'electron-updater';
 import menuTemplate from './menu';
 import StorageService from './services/storage'
 import ConfigurationService from './services/configuration'
@@ -42,7 +43,11 @@ function createWindow() {
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate));
 }
 
-app.on('ready', createWindow);
+app.on('ready', () => {
+  if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
+  createWindow()
+});
+
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -55,6 +60,10 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
+autoUpdater.on('update-downloaded', () => {
+  autoUpdater.quitAndInstall()
+})
 
 export {
   mainWindow,
