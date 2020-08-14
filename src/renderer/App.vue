@@ -49,6 +49,31 @@
   </div>
 </template>
 
+<style scoped>
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons');
+
+.no-padding {
+  padding: 0;
+}
+.footer-border {
+  border-top: 1px
+}
+.toolbar-title {
+  width: 500px;
+}
+.app-toolbar {
+  z-index: 10;
+}
+@media print {
+  .app-toolbar {
+    display: none;
+  }
+  .main-content {
+    padding-top: 56px !important;
+  }
+}
+</style>
+
 <script>
 import CommonMixins from './mixins/commonMixins';
 
@@ -98,24 +123,3 @@ export default {
   }
 };
 </script>
-
-<style>
-@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons');
-.no-padding {
-  padding: 0;
-}
-.footer-border {
-  border-top: 1px
-}
-.toolbar-title {
-  width: 500px;
-}
-@media print {
-  .app-toolbar {
-    display: none;
-  }
-  .main-content {
-    padding-top: 56px !important;
-  }
-}
-</style>
