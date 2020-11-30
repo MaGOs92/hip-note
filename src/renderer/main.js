@@ -1,7 +1,9 @@
 import Vue from 'vue';
 import axios from 'axios';
 import Vuetify from 'vuetify';
+
 import 'vuetify/dist/vuetify.css';
+import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
 import App from './App';
 import router from './router';
@@ -20,7 +22,7 @@ const theme = {
   warning: '#FFC107'
 }
 
-Vue.use(Vuetify, {theme});
+Vue.use(Vuetify, { theme });
 Vue.filter('dateFormated', dateFormated);
 Vue.filter('dateRelative', dateRelative);
 Vue.filter('marked', markedDown);
