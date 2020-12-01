@@ -18,6 +18,15 @@ npm run build
 # lint all JS/Vue component files in `src/`
 npm run lint
 
+# Publish new release
+## Update package.json with new version X.X.X (TODO : automate this with git hooks)
+git tag vX.X.X
+git push origin vX.X.X
+
+## Create draft release on github with the tag created just before
+
+npm run build:publish
+
 ```
 
 ---
