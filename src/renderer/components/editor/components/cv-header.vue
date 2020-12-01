@@ -2,7 +2,10 @@
   <div
     class="cv-header-wrapper">
     <div class="cv-header-inner1 primary">
-      <h1>{{ name }}</h1>
+      <div>
+        <h1>{{ name }}</h1>
+        <h4>{{ age }}</h4>
+      </div>
       <h3>{{ experience }}</h3>
       <img
         v-if="photo"
@@ -12,15 +15,51 @@
     </div>
     <div class="cv-header-inner2">
       <h2 class="cv-position">{{ position }}</h2>
-      <h4><v-icon
-        small
-        class="cv-icon">email</v-icon>{{ email }}</h4>
-      <h4><v-icon
-        small
-        class="cv-icon">phone</v-icon>{{ phone }}</h4>
-      <h4><v-icon
-        small
-        class="cv-icon">book</v-icon>{{ portfolio }}</h4>
+      <v-layout row>
+        <v-flex 
+          xs6 
+          class="cv-header-details">
+          <div>
+            <v-chip 
+              v-for="skill in parsedSkills"
+              :key="skill"
+              small
+              text-color="white" 
+              color="primary">{{ skill }}</v-chip>
+          </div>
+          <!-- <div>
+            <v-chip 
+              v-for="language in parsedLanguages"
+              :key="language"
+              small
+              text-color="white" 
+              color="primary">{{ language }}</v-chip></div> -->
+        </v-flex>
+        <v-flex 
+          xs6 
+          class="cv-header-about-me">
+          <h4>
+            <v-icon
+              small
+              class="cv-icon">location_on</v-icon>{{ location }}
+          </h4>
+          <h4>
+            <v-icon
+              small
+              class="cv-icon">email</v-icon>{{ email }}
+          </h4>
+          <h4>
+            <v-icon
+              small
+              class="cv-icon">phone</v-icon>{{ phone }}
+          </h4>
+          <h4>
+            <v-icon
+              small
+              class="cv-icon">book</v-icon>{{ portfolio }}
+          </h4>
+        </v-flex>
+      </v-layout>
     </div>
   </div>
 </template>
@@ -38,12 +77,8 @@
   padding: 20px;
 }
 .cv-header-inner2 {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
   padding: 20px;
-  background-color: #E5E5E5;
+  border-bottom: 2px solid rgba(0,0,0,0.12);
 }
 .cv-icon {
   color: black;
@@ -62,6 +97,7 @@
 </style>
 
 <script>
+import moment from 'moment'
 export default {
   props: {
     name: {
@@ -89,16 +125,44 @@ export default {
       type: String,
       default: ''
     },
+    photo: {
+      required: false,
+      type: String,
+      default: ''
+    },
+    location: {
+      required: false,
+      type: String,
+      default: ''
+    },
     portfolio: {
       required: false,
       type: String,
       default: ''
     },
-    photo: {
+    skills: {
+      required: false,
+      type: String,
+      default: ''
+    },
+    languages: {
+      required: false,
+      type: String,
+      default: ''
+    },
+    age: {
       required: false,
       type: String,
       default: ''
     }
-  }  
+  },
+  computed: {
+    parsedSkills() {
+      return JSON.parse(this.skills)
+    },
+    parsedLanguages() {
+      return JSON.parse(this.languages)
+    }, 
+  }
 };
 </script>

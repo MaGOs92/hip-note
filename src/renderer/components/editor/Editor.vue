@@ -49,8 +49,8 @@
 }
 
 .ace-editor-custom .ace_gutter {
-    z-index: 1;
-    background-color: #f5f5f5 !important;
+  z-index: 1;
+  background-color: #f5f5f5 !important;
 }
 
 .full-width {
@@ -74,7 +74,7 @@
     margin-top: -56px;
     width: 100%;
   }
-  .editor {
+  .ace-editor-custom {
     display: none;
   }
 }

@@ -60,12 +60,21 @@
   z-index: 10;
 }
 @media print {
+  .application {
+    background: white;
+  }
   .app-toolbar {
     display: none;
   }
   .main-content {
     padding-top: 56px !important;
   }
+}
+</style>
+
+<style>
+html {
+  font-size: 15px;
 }
 </style>
 
