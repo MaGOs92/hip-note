@@ -1,7 +1,7 @@
 <template>
   <v-layout 
-    id="wrapper"
-    fill-height
+    id="wrapper" 
+    fill-height 
     row 
     wrap 
     justify-center>
@@ -12,7 +12,8 @@
           append-icon="search"
           label="Recherche"
           single-line
-          hide-details/>
+          hide-details
+        />
       </v-card-title>
       <v-data-table
         :headers="headers"
@@ -20,30 +21,37 @@
         :search="search"
         :loading="isLoading"
         hide-actions
-        class="data-table">
-        <v-progress-linear
-          slot="progress"
-          color="blue"
+        class="data-table"
+      >
+        <v-progress-linear 
+          slot="progress" 
+          color="blue" 
           indeterminate />
-        <template
-          slot="items"
+        <template 
+          slot="items" 
           slot-scope="props">
           <tr
             class="data-table-line"
-            @click="navigate('/editor', {id: props.item.id})">
+            @click="navigate('/editor', { id: props.item.id })"
+          >
             <td>{{ props.item.title }}</td>
             <td>{{ props.item.created | dateFormated }}</td>
             <td>{{ props.item.lastModified | dateRelative }}</td>
             <td>
-              <v-icon @click="toggleFav($event, props.item)">{{ props.item.isFav | favIcon }}</v-icon>
+              <v-icon @click.stop="toggleFav($event, props.item)">{{
+                props.item.isFav | favIcon
+              }}</v-icon>
             </td>
             <td>
-              <v-icon @click="deleteDocument($event, props.item)">delete</v-icon>
+              <v-icon 
+                @click.stop="deleteDialog = true"
+              >delete</v-icon
+              >
             </td>
           </tr>
         </template>
-        <div
-          slot="no-results"
+        <div 
+          slot="no-results" 
           :value="true">
           Aucun résultat pour la recherche "{{ search }}".
         </div>
@@ -56,74 +64,102 @@
       fixed
       bottom
       right
-      @click="navigate('/editor')">
+      @click="navigate('/editor')"
+    >
       <v-icon dark>add</v-icon>
     </v-btn>
+    <v-dialog 
+      v-model="deleteDialog" 
+      max-width="290">
+      <v-card>
+        <v-card-title>
+          Êtes-vous sûr de vouloir supprimer cette note?
+        </v-card-title>
+        <v-card-actions>
+          <v-spacer />
+
+          <v-btn 
+            small 
+            @click="deleteDialog = false"> Annuler </v-btn>
+
+          <v-btn
+            color="primary"
+            small
+            @click="deleteDocument($event, props.item)"
+          >
+            Supprimer
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-layout>
 </template>
 
 <style scoped>
-  .main-card {
-    width: 100%;
-  }
-  .data-table {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  .data-table-line:hover {
-    cursor: pointer;
-  }
+.main-card {
+  width: 100%;
+}
+.data-table {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.data-table-line:hover {
+  cursor: pointer;
+}
 </style>
 
 <script>
-import CommonMixins from './../mixins/commonMixins';
+import CommonMixins from "./../mixins/commonMixins";
 
 export default {
-  name: 'Home',
+  name: "Home",
   filters: {
     favIcon(isFav) {
-      return isFav ? 'star' : 'star_border';
-    }
+      return isFav ? "star" : "star_border";
+    },
   },
   mixins: [CommonMixins],
   data() {
-   return {
+    return {
+      deleteDialog: false,
       headers: [
         {
-          text: 'Titre',
-          value: 'title',
-          align: 'left'
+          text: "Titre",
+          value: "title",
+          align: "left",
         },
         {
-          text: 'Création',
-          value: 'created',
-          align: 'left'
+          text: "Création",
+          value: "created",
+          align: "left",
         },
         {
-          text: 'Dernière modification',
-          value: 'lastModified',
-          align: 'left'
+          text: "Dernière modification",
+          value: "lastModified",
+          align: "left",
         },
         {
-          text: 'Favori',
-          value: 'isFav',
-          align: 'left'
+          text: "Favori",
+          value: "isFav",
+          align: "left",
         },
         {
-          text: 'Actions',
-          value: 'actions',
-          align: 'left'
+          text: "Actions",
+          value: "actions",
+          align: "left",
         },
       ],
       isLoading: true,
-      search: '',
-   } 
+      search: "",
+    };
   },
   computed: {
     documents() {
-      return this.$store.state.document.allDocuments.filter(document => !document.deleted);
-    }
+      return this.$store.state.document.allDocuments.filter(
+        (document) => !document.deleted
+      );
+    },
   },
   beforeMount() {
     return this.fetchAllDocuments();
@@ -131,28 +167,26 @@ export default {
   methods: {
     async fetchAllDocuments() {
       this.isLoading = true;
-      await this.$store.dispatch('LIST_ALL_DOCUMENTS');
+      await this.$store.dispatch("LIST_ALL_DOCUMENTS");
       this.isLoading = false;
     },
     toggleFav(event, document) {
-      event.stopPropagation();
       const newDocument = {
         ...document,
-        isFav: !document.isFav
+        isFav: !document.isFav,
       };
-      this.$store.dispatch('UPDATE_ALL_DOCUMENTS', newDocument);
-      this.$store.dispatch('SAVE_DOCUMENT', newDocument);
+      this.$store.dispatch("UPDATE_ALL_DOCUMENTS", newDocument);
+      this.$store.dispatch("SAVE_DOCUMENT", newDocument);
     },
     deleteDocument(event, document) {
-      event.stopPropagation();
       const newDocument = {
         ...document,
-        deleted: true
+        deleted: true,
       };
-      this.$store.dispatch('UPDATE_ALL_DOCUMENTS', newDocument);
-      this.$store.dispatch('SAVE_DOCUMENT', newDocument);
+      this.$store.dispatch("UPDATE_ALL_DOCUMENTS", newDocument);
+      this.$store.dispatch("SAVE_DOCUMENT", newDocument);
     },
-  }
+  },
 };
 </script>
 
