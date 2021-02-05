@@ -8,17 +8,65 @@
     <v-card class="main-card">
       <v-card-title>
         <v-text-field
-          v-model="search"
+          v-model="titleFilter"
           append-icon="search"
-          label="Recherche"
+          label="Filtrer par titre"
+          class="filter-title-input"
           single-line
           hide-details
         />
+        <v-autocomplete
+          v-model="tagsFilter"
+          :items="Object.values(tags)"
+          :height="32"
+          label="Filtrer par tag"
+          class="filter-tags-input"
+          item-text="name"
+          item-value="id"
+          chips
+          clearable
+          multiple
+          hide-details
+        >
+          <template v-slot:selection="{item}">
+            <v-chip
+              :color="item.color"
+              text-color="white"
+              close
+              @input="removeTag(item)"
+            >
+              <v-avatar v-if="item.icon">
+                <v-icon>{{ item.icon }}</v-icon>
+              </v-avatar>
+              {{ item.name }}
+            </v-chip>
+          </template>
+          <template v-slot:item="{item, tile}">
+            <span class="tags-autocomplete-item">
+              <v-checkbox 
+                :value="tile.props.value" 
+                color="primary" />
+              <v-chip
+                :color="item.color"
+                text-color="white"
+              >
+                <v-avatar v-if="item.icon">
+                  <v-icon>{{ item.icon }}</v-icon>
+                </v-avatar>
+                {{ item.name }}
+              </v-chip>
+            </span>
+          </template>
+          <template v-slot:no-data>
+            <v-list-tile>
+              <span>Aucun tag ne correspond à votre recherche</span>
+            </v-list-tile>
+          </template>
+        </v-autocomplete>
       </v-card-title>
       <v-data-table
         :headers="headers"
-        :items="documents"
-        :search="search"
+        :items="filteredDocuments(documents)"
         :loading="isLoading"
         hide-actions
         class="data-table"
@@ -35,6 +83,19 @@
             @click="navigate('/editor', { id: props.item.id })"
           >
             <td>{{ props.item.title }}</td>
+            <td>
+              <v-chip 
+                v-for="tagId in props.item.tags" 
+                :key="tagId" 
+                :color="tags[tagId] && tags[tagId].color"
+                text-color="white"
+                disabled>
+                <v-avatar v-if="tags[tagId] && tags[tagId].icon">
+                  <v-icon>{{ tags[tagId].icon }}</v-icon>
+                </v-avatar>
+                {{ tags[tagId] && tags[tagId].name }}
+              </v-chip>
+            </td>
             <td>{{ props.item.created | dateFormated }}</td>
             <td>{{ props.item.lastModified | dateRelative }}</td>
             <td>
@@ -107,6 +168,17 @@
 .data-table-line:hover {
   cursor: pointer;
 }
+.tags-autocomplete-item {
+  display: flex;
+  align-items: center;
+}
+.filter-title-input {
+  width: 50%;
+  margin-right: 15px;
+}
+.filter-tags-input {
+  width: 40%;
+}
 </style>
 
 <script>
@@ -127,6 +199,11 @@ export default {
         {
           text: "Titre",
           value: "title",
+          align: "left",
+        },
+        {
+          text: "Tags",
+          value: "tags",
           align: "left",
         },
         {
@@ -160,13 +237,39 @@ export default {
         (document) => !document.deleted
       );
     },
+    tags() {
+      return this.$store.state.tag.allTags
+    },
+    titleFilter: {
+      get() {
+        return this.$store.state.home.filters.title
+      },
+      set(title) {
+        this.$store.dispatch("SET_FILTERS", {
+          ...this.$store.state.home.filters,
+          title,
+        });
+      }
+    },
+    tagsFilter: {
+      get() {
+        return this.$store.state.home.filters.tags
+      },
+      set(tags) {
+        this.$store.dispatch("SET_FILTERS", {
+          ...this.$store.state.home.filters,
+          tags,
+        });
+      }
+    }
   },
   beforeMount() {
-    return this.fetchAllDocuments();
+    return this.fetchData();
   },
   methods: {
-    async fetchAllDocuments() {
+    async fetchData() {
       this.isLoading = true;
+      await this.$store.dispatch("GET_TAGS");
       await this.$store.dispatch("LIST_ALL_DOCUMENTS");
       this.isLoading = false;
     },
@@ -185,6 +288,28 @@ export default {
       };
       this.$store.dispatch("UPDATE_ALL_DOCUMENTS", newDocument);
       this.$store.dispatch("SAVE_DOCUMENT", newDocument);
+    },
+    filteredDocuments(documents) {
+      return documents
+        .filter(({ tags }) => {
+          if (this.tagsFilter && this.tagsFilter.length > 0) {
+            return this.tagsFilter.some((tagFilter) => tags.indexOf(tagFilter) > -1)
+          }
+
+          return true
+        })
+        .filter(({ title }) => {
+          if (this.titleFilter) {
+            return title.toLowerCase().includes(this.titleFilter.toLowerCase())
+          }
+
+          return true
+        })
+    },
+    removeTag({ id }) {
+      const tags = [...this.tagsFilter];
+      tags.splice(this.tagsFilter.indexOf(id), 1);
+      this.tagsFilter = tags
     },
   },
 };

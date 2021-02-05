@@ -30,6 +30,7 @@ const actions = {
   CREATE_DOCUMENT({ commit }) {
     const newDocument = {
       id: shortid.generate(),
+      tags: [],
       title: 'Sans titre',
       content: '# Hello World :)',
       type: 'NOTE',

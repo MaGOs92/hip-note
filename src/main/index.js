@@ -5,6 +5,7 @@ import StorageService from './services/storage';
 import ConfigurationService from './services/configuration';
 import './rpc/document';
 import './rpc/export';
+import './rpc/tag';
 
 /**
  * Set `__static` path to static files in production

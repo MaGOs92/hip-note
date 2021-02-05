@@ -41,13 +41,14 @@ const listAllDocuments = async () => {
         folder,
     })))
   })
-  .then(allDocuments => allDocuments.map(({id, title, created, lastModified, isFav, deleted}) => {
+  .then(allDocuments => allDocuments.map(({id, title, created, lastModified, isFav, tags, deleted}) => {
     return {
       id,
       title,
       created,
       lastModified,
       isFav,
+      tags,
       deleted
     };
   }));

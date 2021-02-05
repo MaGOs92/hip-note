@@ -1,6 +1,6 @@
 {
   "name": "hip-note",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "author": "Guillaume Fay",
   "description": "Markdown editor with templates for taking notes, writing articles, generating resumes and much more!",
   "license": "MIT",
@@ -65,7 +65,7 @@
     "vue": "^2.4.2",
     "vue-electron": "^1.0.6",
     "vue-router": "^2.5.3",
-    "vuetify": "1.3.5",
+    "vuetify": "^1.5.3",
     "vuex": "^2.3.1"
   },
   "devDependencies": {
@@ -110,7 +110,7 @@
     "vue-html-loader": "^1.2.4",
     "vue-loader": "^13.0.5",
     "vue-style-loader": "^3.0.1",
-    "vue-template-compiler": "^2.4.2",
+    "vue-template-compiler": "^2.6.10",
     "vue2-ace-editor": "0.0.15",
     "webpack": "^3.5.2",
     "webpack-dev-server": "^2.7.1",
