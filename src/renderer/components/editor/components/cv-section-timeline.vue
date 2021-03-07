@@ -57,6 +57,7 @@
 }
 .cv-timeline {
   padding: 20px 40px;
+  page-break-after: always;
 }
 .cv-timeline-item {
   border: 2px solid rgba(0,0,0,0.12);

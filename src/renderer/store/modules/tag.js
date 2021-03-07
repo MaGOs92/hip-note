@@ -8,20 +8,18 @@ const state = {
 const mutations = {
   setTags(state, tags) {
     state.allTags = tags;
-  },
-  setTag(state, tag) {
-    state.allTags[tag.id] = tag
   }
 };
 
 const actions = {
-  async SAVE_TAG({ commit }, tag) {
+  async SAVE_TAG({ commit, state }, tag) {
     if (!tag.id) {
       tag.id = shortid.generate()
     }
     try {
-      await saveTag(tag)
-      commit('setTag', tag)
+      const savedTag = await saveTag(tag)
+      commit('setTags', {...state.allTags, [savedTag.id]: savedTag})
+      return savedTag
     } catch (err) {
       console.error('Erreur lors de la sauvegarde du tag', err);
     }

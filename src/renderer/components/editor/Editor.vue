@@ -4,6 +4,7 @@
       ref="editor"
       v-model="documentContent"
       :width="isFullwidth ? '0%' : '50%'"
+      height="100%"
       lang="markdown"
       theme="chrome"
       class="ace-editor-custom"
@@ -83,7 +84,6 @@
 
 <script>
 import ContentParser from './content-parser';
-import CodeMirror from 'codemirror';
 import components from './components';
 import VueAceEditor from 'vue2-ace-editor'
 import "brace/ext/language_tools";
@@ -130,6 +130,7 @@ export default {
     },
     editorInit(editor) {
       editor.getSession().setUseWrapMode(true);
+      editor.setOption("showPrintMargin", false);
     }
   }
 };

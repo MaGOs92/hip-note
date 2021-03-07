@@ -105,7 +105,7 @@
             </td>
             <td>
               <v-icon 
-                @click.stop="deleteDialog = true"
+                @click.stop="() => showDeleteDialog(props.item)"
               >delete</v-icon
               >
             </td>
@@ -141,12 +141,12 @@
 
           <v-btn 
             small 
-            @click="deleteDialog = false"> Annuler </v-btn>
+            @click="hideDeleteDialog"> Annuler </v-btn>
 
           <v-btn
             color="primary"
             small
-            @click="deleteDocument($event, props.item)"
+            @click="deleteDocument"
           >
             Supprimer
           </v-btn>
@@ -195,6 +195,7 @@ export default {
   data() {
     return {
       deleteDialog: false,
+      documentToDelete: null,
       headers: [
         {
           text: "Titre",
@@ -281,13 +282,22 @@ export default {
       this.$store.dispatch("UPDATE_ALL_DOCUMENTS", newDocument);
       this.$store.dispatch("SAVE_DOCUMENT", newDocument);
     },
-    deleteDocument(event, document) {
+    showDeleteDialog(document) {
+      this.deleteDialog = true
+      this.documentToDelete = document
+    },
+    hideDeleteDialog() {
+      this.documentToDelete = null
+      this.deleteDialog = false
+    },
+    async deleteDocument() {
       const newDocument = {
-        ...document,
+        ...this.documentToDelete,
         deleted: true,
       };
-      this.$store.dispatch("UPDATE_ALL_DOCUMENTS", newDocument);
-      this.$store.dispatch("SAVE_DOCUMENT", newDocument);
+      await this.$store.dispatch("UPDATE_ALL_DOCUMENTS", newDocument);
+      this.hideDeleteDialog()
+      await this.$store.dispatch("SAVE_DOCUMENT", newDocument);
     },
     filteredDocuments(documents) {
       return documents

@@ -19,17 +19,19 @@ const saveTag = async tag => {
   const tags = await getTags()
   tags[tag.id] = tag
 
-  return storageService.writeJson({
+  await storageService.writeJson({
     file: 'tags.json',
     folder,
     data: tags
   })
+
+  return tag
 };
 
 ipcMain.on('saveTag', (event, message) => {
   return saveTag(message.data)
-    .then(() => {
-      mainWindow.webContents.send('saveTag', {id: message.id})
+    .then((tag) => {
+      mainWindow.webContents.send('saveTag', {id: message.id, data: tag})
     })
     .catch((err) => {
       console.error(err);

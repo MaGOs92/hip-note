@@ -113,7 +113,7 @@
       <v-dialog 
         v-model="newTagDialog" 
         max-width="290">
-        <form @submit="addTag">
+        <form @submit.prevent="addTag">
           <v-card>
             <v-card-title class="subheading">Créer un nouveau tag</v-card-title>
             <v-divider/>
@@ -299,11 +299,6 @@ export default {
     },
   },
   methods: {
-    isTagSelected(item, tile) {
-      console.log(item, tile)
-
-      return this.documentTags.indexOf(item.id) > -1
-    },
     toggleFullwidth() {
       this.$store.dispatch(
         "SET_FULLWIDTH",
@@ -327,8 +322,8 @@ export default {
       this.newTagDialog = true
     },
     async addTag() {
-      await this.$store.dispatch("SAVE_TAG", this.newTag);
-      this.documentTags = [...this.documentTags, this.newTag.id]
+      const savedTag = await this.$store.dispatch("SAVE_TAG", this.newTag);
+      this.documentTags = [...this.documentTags, savedTag.id]
       this.newTagDialog = false
     },
     removeTag({ id }) {
