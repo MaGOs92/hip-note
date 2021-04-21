@@ -36,8 +36,8 @@
 @import '~/node_modules/highlight.js/styles/github.css';
 
 #editor {
+  height: calc(100vh - 64px);
   margin: 0;
-  height: 100%;
   width: 100%;
   font-family: 'Helvetica Neue', Arial, sans-serif;
   color: #333;
@@ -46,6 +46,7 @@
 
 #editor-renderer {
   height: 100%;
+  overflow-y: scroll;
   position: relative;
 }
 
@@ -79,26 +80,25 @@
     display: none;
   }
 }
-
 </style>
 
 <script>
 import ContentParser from './content-parser';
 import components from './components';
-import VueAceEditor from 'vue2-ace-editor'
-import "brace/ext/language_tools";
-import "brace/mode/markdown";
-import "brace/theme/chrome";
+import VueAceEditor from 'vue2-ace-editor';
+import 'brace/ext/language_tools';
+import 'brace/mode/markdown';
+import 'brace/theme/chrome';
 
 export default {
   name: 'Editor',
   components: {
     ...components,
-    VueAceEditor
+    VueAceEditor,
   },
   data() {
     return {
-      components: []
+      components: [],
     };
   },
   computed: {
@@ -112,12 +112,14 @@ export default {
           lastModified: new Date(),
           content,
         });
-        this.contentParser.processContent(content).then(processedArray => this.components = processedArray);
-      }
+        this.contentParser
+          .processContent(content)
+          .then((processedArray) => (this.components = processedArray));
+      },
     },
     isFullwidth() {
       return this.$store.state.editor.fullWidth;
-    }
+    },
   },
   beforeMount() {
     this.contentParser = new ContentParser();
@@ -125,13 +127,17 @@ export default {
   },
   methods: {
     async fetchDocument() {
-      this.$route.query.id ? await this.$store.dispatch('GET_DOCUMENT', this.$route.query.id) : this.$store.dispatch('CREATE_DOCUMENT');
-      this.contentParser.processContent(this.documentContent).then(processedArray => this.components = processedArray, 0);
+      this.$route.query.id
+        ? await this.$store.dispatch('GET_DOCUMENT', this.$route.query.id)
+        : this.$store.dispatch('CREATE_DOCUMENT');
+      this.contentParser
+        .processContent(this.documentContent)
+        .then((processedArray) => (this.components = processedArray), 0);
     },
     editorInit(editor) {
       editor.getSession().setUseWrapMode(true);
-      editor.setOption("showPrintMargin", false);
-    }
-  }
+      editor.setOption('showPrintMargin', false);
+    },
+  },
 };
 </script>
