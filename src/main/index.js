@@ -1,8 +1,8 @@
 import { app, BrowserWindow, Menu } from 'electron';
-import { autoUpdater } from 'electron-updater';
 import menuTemplate from './menu';
 import StorageService from './services/storage';
 import ConfigurationService from './services/configuration';
+import AppUpdateService from './services/app-update';
 import './rpc/document';
 import './rpc/export';
 import './rpc/tag';
@@ -12,27 +12,29 @@ import './rpc/tag';
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
 if (process.env.NODE_ENV !== 'development') {
-  global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\') // eslint-disable-line
+  global.__static = require('path')
+    .join(__dirname, '/static')
+    .replace(/\\/g, '\\\\'); // eslint-disable-line
 }
 
 let mainWindow;
 
-const storageService = new StorageService()
-const configurationService = new ConfigurationService(app.getPath('appData'))
+const storageService = new StorageService();
+const configurationService = new ConfigurationService(app.getPath('appData'));
 
-export const rootURL = process.env.NODE_ENV === 'development'
-  ? 'http://localhost:9080'
-  : `file://${__dirname}/index.html`;
+export const rootURL =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:9080'
+    : `file://${__dirname}/index.html`;
 
 function createWindow() {
-
   mainWindow = new BrowserWindow({
     height: 563,
     useContentSize: true,
     width: 1000,
     webPreferences: {
-      webSecurity: false
-    }
+      webSecurity: false,
+    },
   });
 
   mainWindow.loadURL(rootURL);
@@ -45,10 +47,11 @@ function createWindow() {
 }
 
 app.on('ready', () => {
-  if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
-  createWindow()
+  if (process.env.NODE_ENV === 'production') {
+    new AppUpdateService();
+  }
+  createWindow();
 });
-
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -62,13 +65,4 @@ app.on('activate', () => {
   }
 });
 
-autoUpdater.on('update-downloaded', () => {
-  autoUpdater.quitAndInstall()
-})
-
-export {
-  mainWindow,
-  app,
-  storageService,
-  configurationService,
-}
+export { mainWindow, app, storageService, configurationService };
