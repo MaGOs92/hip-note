@@ -8,20 +8,26 @@ const state = {
 const mutations = {
   setTags(state, tags) {
     state.allTags = tags;
-  }
+  },
 };
 
 const actions = {
   async SAVE_TAG({ commit, state }, tag) {
     if (!tag.id) {
-      tag.id = shortid.generate()
+      tag.id = shortid.generate();
     }
     try {
-      const savedTag = await saveTag(tag)
-      commit('setTags', {...state.allTags, [savedTag.id]: savedTag})
-      return savedTag
+      const savedTag = await saveTag(tag);
+      commit('setTags', { ...state.allTags, [savedTag.id]: savedTag });
+      return savedTag;
     } catch (err) {
-      console.error('Erreur lors de la sauvegarde du tag', err);
+      this._vm.$toast.open({
+        type: 'error',
+        position: 'top-right',
+        duration: 2000,
+        message: 'Une erreur est survenue lors de la sauvegarde du tag.',
+      });
+      console.error(err);
     }
   },
   async GET_TAGS({ commit }) {
@@ -29,7 +35,13 @@ const actions = {
       const tags = await getTags();
       commit('setTags', tags);
     } catch (err) {
-      console.error('Erreur lors de la lecture des tags', err);
+      this._vm.$toast.open({
+        type: 'error',
+        position: 'top-right',
+        duration: 2000,
+        message: 'Une erreur est survenue lors de la récupération des tags.',
+      });
+      console.error(err);
     }
   },
 };

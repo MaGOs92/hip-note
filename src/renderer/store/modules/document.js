@@ -8,7 +8,7 @@ const state = {
   curDocument: {},
   allDocuments: [],
   isLoaded: false,
-  isSaved: true
+  isSaved: true,
 };
 
 const mutations = {
@@ -23,7 +23,7 @@ const mutations = {
   },
   setAllDocuments(state, documents) {
     state.allDocuments = documents;
-  }
+  },
 };
 
 const actions = {
@@ -34,7 +34,7 @@ const actions = {
       title: 'Sans titre',
       content: '# Hello World :)',
       type: 'NOTE',
-      created: new Date()
+      created: new Date(),
     };
     commit('setCurDocument', newDocument);
     commit('setIsLoaded', true);
@@ -44,10 +44,15 @@ const actions = {
     commit('setCurDocument', document);
     try {
       await debouncer.debounce(save, document);
-      commit('setIsSaved', true);  
-    }
-    catch (err) {
-      console.error('Erreur lors de la sauvegarde du document', err);
+      commit('setIsSaved', true);
+    } catch (err) {
+      this._vm.$toast.open({
+        type: 'error',
+        position: 'top-right',
+        duration: 2000,
+        message: 'Une erreur est survenue lors de la sauvegarde du document.',
+      });
+      console.error(err);
     }
   },
   async GET_DOCUMENT({ commit }, id) {
@@ -57,7 +62,13 @@ const actions = {
       commit('setCurDocument', document);
       commit('setIsLoaded', true);
     } catch (err) {
-      console.error('Erreur lors de la lecture du document', err);
+      this._vm.$toast.open({
+        type: 'error',
+        position: 'top-right',
+        duration: 2000,
+        message: 'Une erreur est survenue lors de la lecture du document.',
+      });
+      console.error(err);
     }
   },
   async LIST_ALL_DOCUMENTS({ commit }) {
@@ -65,14 +76,25 @@ const actions = {
       const allDocuments = await listAll();
       commit('setAllDocuments', allDocuments);
     } catch (err) {
-      console.error('Erreur lors de la lecture du document', err);
+      this._vm.$toast.open({
+        type: 'error',
+        position: 'top-right',
+        duration: 2000,
+        message:
+          'Une erreur est survenue lors de la récupération des documents.',
+      });
+      console.error(err);
     }
   },
   async UPDATE_ALL_DOCUMENTS({ commit, state }, document) {
     const allDocumentsUpdated = [...state.allDocuments];
-    allDocumentsUpdated.splice(state.allDocuments.findIndex(doc => doc.id === document.id), 1, document);
+    allDocumentsUpdated.splice(
+      state.allDocuments.findIndex((doc) => doc.id === document.id),
+      1,
+      document
+    );
     commit('setAllDocuments', allDocumentsUpdated);
-  }
+  },
 };
 
 export default {

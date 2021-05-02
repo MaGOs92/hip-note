@@ -11,7 +11,7 @@ ipcMain.on('exportToPDF', async (event, message) => {
   } finally {
     const success = Boolean(pdfPath);
     mainWindow.webContents.send('exportToPDF', {
-      success
+      success,
     });
   }
 });

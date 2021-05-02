@@ -1,10 +1,10 @@
 /* CSS Customization inside the editor renderer, for the default markdown */
 .markedown-div > h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+.markedown-div > h2,
+.markedown-div > h3,
+.markedown-div > h4,
+.markedown-div > h5,
+.markedown-div > h6 {
   margin: 16px 0;
 }
 
@@ -15,6 +15,10 @@ h6 {
 .markedown-div code::before,
 code::after {
   display: none;
+}
+
+.markedown-div > *:first-child {
+  margin-top: 0;
 }
 
 .markedown-div > *:last-child {

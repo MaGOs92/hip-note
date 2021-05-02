@@ -2,9 +2,8 @@ import fs from 'fs-extra';
 import path from 'path';
 
 export default class {
-
   async writeJson({ file, folder, data }) {
-    console.log('folder', folder)
+    console.log('folder', folder);
     try {
       await fs.ensureDir(folder);
       return fs.writeJson(path.join(folder, file), data);
@@ -16,9 +15,8 @@ export default class {
   async readJson({ file, folder }) {
     try {
       await fs.ensureDir(folder);
-      return fs.readJson(path.join(folder, file));  
-    }
-    catch (err) {
+      return fs.readJson(path.join(folder, file));
+    } catch (err) {
       return Promise.reject(err);
     }
   }
@@ -27,8 +25,7 @@ export default class {
     try {
       await fs.ensureDir(folder);
       return fs.readdir(folder);
-    }
-    catch (err) {
+    } catch (err) {
       return Promise.reject(err);
     }
   }

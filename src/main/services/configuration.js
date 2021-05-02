@@ -1,6 +1,6 @@
 import path from 'path';
-import * as config from '../config.json'
-import { loadSettings } from '../rpc/configuration'
+import * as config from '../config.json';
+import { loadSettings } from '../rpc/configuration';
 
 export default class {
   constructor(appDataPath) {
@@ -8,15 +8,18 @@ export default class {
   }
 
   getDefaultDocumentSavePath() {
-    return path.join(this.appDataPath, config.sub_folders.DOCUMENTS)
+    return path.join(this.appDataPath, config.sub_folders.DOCUMENTS);
   }
 
   async getDocumentSavePath() {
-    const userSettings = await loadSettings()
-    return userSettings && userSettings.saveFolder || this.getDefaultDocumentSavePath()
+    const userSettings = await loadSettings();
+    return (
+      (userSettings && userSettings.saveFolder) ||
+      this.getDefaultDocumentSavePath()
+    );
   }
 
   getConfigurationSavePath() {
-    return path.join(this.appDataPath, config.sub_folders.CONFIGURATION)
+    return path.join(this.appDataPath, config.sub_folders.CONFIGURATION);
   }
 }

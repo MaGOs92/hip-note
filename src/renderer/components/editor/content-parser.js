@@ -105,24 +105,33 @@ export default class {
     this.componentsArray = this.componentsArray.reduce(
       (acc, cur, index, array) => {
         if (index === 0 && cur.index !== 0) {
+          const markdownString = this.content.substring(0, cur.index);
           acc.push({
             name: 'div',
-            html: this.getHtmlFromMardownString(content),
+            html: this.getHtmlFromMardownString(markdownString),
           });
         }
         acc.push(cur);
         if (array[index + 1] && cur.lastIndex + 1 !== array[index + 1].index) {
+          const markdownString = this.content.substring(
+            cur.lastIndex,
+            array[index + 1].index
+          );
           acc.push({
             name: 'div',
-            html: this.getHtmlFromMardownString(content),
+            html: this.getHtmlFromMardownString(markdownString),
           });
         } else if (
           index === array.length - 1 &&
           cur.lastIndex !== this.content.length
         ) {
+          const markdownString = this.content.substring(
+            cur.lastIndex,
+            this.content.length - 1
+          );
           acc.push({
             name: 'div',
-            html: this.getHtmlFromMardownString(content),
+            html: this.getHtmlFromMardownString(markdownString),
           });
         }
         return acc;

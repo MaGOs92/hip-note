@@ -82,7 +82,6 @@
           </v-autocomplete>
         </v-toolbar-title>
         <v-spacer />
-        <v-icon :disabled="!isDocumentSaved">saved</v-icon>
         <v-btn 
           small 
           fab 
@@ -235,9 +234,9 @@ html {
 </style>
 
 <script>
-import CommonMixins from "./mixins/commonMixins";
+import CommonMixins from './mixins/commonMixins';
 import colors from 'vuetify/lib/util/colors';
-import { mdiNames } from '../shared/mdi_names'
+import { mdiNames } from '../shared/mdi_names';
 
 export default {
   mixins: [CommonMixins],
@@ -247,10 +246,14 @@ export default {
       tagColors: Object.keys(colors)
         .filter((colorKey) => Boolean(colors[colorKey].base))
         // Camel case to Kebab case
-        .map((colorKey) => colorKey.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase()),
+        .map((colorKey) =>
+          colorKey
+            .replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2')
+            .toLowerCase()
+        ),
       tagIcons: mdiNames,
-      newTag: {}
-    }
+      newTag: {},
+    };
   },
   computed: {
     documentTitle: {
@@ -258,7 +261,7 @@ export default {
         return this.$store.state.document.curDocument.title;
       },
       set(title) {
-        this.$store.dispatch("SAVE_DOCUMENT", {
+        this.$store.dispatch('SAVE_DOCUMENT', {
           ...this.$store.state.document.curDocument,
           lastModified: new Date(),
           title,
@@ -270,7 +273,7 @@ export default {
         return this.$store.state.document.curDocument.tags || [];
       },
       set(tags) {
-        this.$store.dispatch("SAVE_DOCUMENT", {
+        this.$store.dispatch('SAVE_DOCUMENT', {
           ...this.$store.state.document.curDocument,
           lastModified: new Date(),
           tags,
@@ -281,55 +284,51 @@ export default {
       return this.$store.state.tag.allTags;
     },
     isEditMode() {
-      return this.$route.path === "/editor";
+      return this.$route.path === '/editor';
     },
     isDocumentLoaded() {
       return this.$store.state.document.isLoaded;
-    },
-    isDocumentSaved() {
-      return this.$store.state.document.isSaved;
     },
     canExport() {
       return !this.$store.state.editor.isExporting;
     },
     fullWidthIcon() {
       return this.$store.state.editor.fullWidth
-        ? "fullscreen_exit"
-        : "fullscreen";
+        ? 'fullscreen_exit'
+        : 'fullscreen';
     },
   },
   methods: {
     toggleFullwidth() {
       this.$store.dispatch(
-        "SET_FULLWIDTH",
+        'SET_FULLWIDTH',
         !this.$store.state.editor.fullWidth
       );
     },
     exportToPDF() {
-      const element = document.getElementById("editor-renderer");
-      const html = element.outerHTML;
-      this.$store.dispatch("EXPORT_TO_PDF", {
+      this.$store.dispatch('EXPORT_TO_PDF', {
         title: this.documentTitle,
-        html,
       });
     },
     openNewTagDialog() {
       this.newTag = {
         name: '',
         icon: '',
-        color: this.tagColors[Math.floor(Math.random() * this.tagColors.length)]
-      }
-      this.newTagDialog = true
+        color: this.tagColors[
+          Math.floor(Math.random() * this.tagColors.length)
+        ],
+      };
+      this.newTagDialog = true;
     },
     async addTag() {
-      const savedTag = await this.$store.dispatch("SAVE_TAG", this.newTag);
-      this.documentTags = [...this.documentTags, savedTag.id]
-      this.newTagDialog = false
+      const savedTag = await this.$store.dispatch('SAVE_TAG', this.newTag);
+      this.documentTags = [...this.documentTags, savedTag.id];
+      this.newTagDialog = false;
     },
     removeTag({ id }) {
       const tags = [...this.documentTags];
       tags.splice(this.documentTags.indexOf(id), 1);
-      this.$store.dispatch("SAVE_DOCUMENT", {
+      this.$store.dispatch('SAVE_DOCUMENT', {
         ...this.$store.state.document.curDocument,
         lastModified: new Date(),
         tags,

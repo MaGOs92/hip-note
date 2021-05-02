@@ -1,9 +1,11 @@
 import Vue from 'vue';
 import axios from 'axios';
 import Vuetify from 'vuetify';
+import VueToast from 'vue-toast-notification';
 
 import 'vuetify/dist/vuetify.css';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
+import 'vue-toast-notification/dist/theme-sugar.css';
 
 import App from './App';
 import router from './router';
@@ -19,10 +21,11 @@ const theme = {
   error: '#FF5252',
   info: '#2196F3',
   success: '#4CAF50',
-  warning: '#FFC107'
-}
+  warning: '#FFC107',
+};
 
 Vue.use(Vuetify, { theme });
+Vue.use(VueToast);
 Vue.filter('dateFormated', dateFormated);
 Vue.filter('dateRelative', dateRelative);
 Vue.filter('marked', markedDown);

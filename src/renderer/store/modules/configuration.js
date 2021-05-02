@@ -13,11 +13,17 @@ const mutations = {
 const actions = {
   async SAVE_SETTINGS({ commit }, settings) {
     try {
-      await save(settings)
-      commit('setSettings', settings);  
-    }
-    catch (err) {
-      console.error('Erreur lors de la sauvegarde du document', err);
+      await save(settings);
+      commit('setSettings', settings);
+    } catch (err) {
+      this._vm.$toast.open({
+        type: 'error',
+        position: 'top-right',
+        duration: 2000,
+        message:
+          'Une erreur est survenue lors de la sauvegarde de la configuration.',
+      });
+      console.error(err);
     }
   },
   async GET_SETTINGS({ commit }) {
@@ -25,7 +31,14 @@ const actions = {
       const settings = await load();
       commit('setSettings', settings);
     } catch (err) {
-      console.error('Erreur lors de la lecture du document', err);
+      this._vm.$toast.open({
+        type: 'error',
+        position: 'top-right',
+        duration: 2000,
+        message:
+          'Une erreur est survenue lors de la lecture de la configuration.',
+      });
+      console.error(err);
     }
   },
 };
