@@ -73,6 +73,9 @@
 }
 
 @media print {
+  #editor {
+    height: 100%;
+  }
   #editor-renderer {
     margin-top: -56px;
     width: 100%;
