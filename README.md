@@ -4,7 +4,7 @@
 
 #### Build Setup
 
-``` bash
+```bash
 # install dependencies
 npm install
 
@@ -19,12 +19,13 @@ npm run build
 npm run lint
 
 # Publish new release
-## Draft a new release. Set the “Tag version” to the value of version in your application package.json, and prefix it with v. “Release title” can be anything you want.
-## For example, if your application package.json version is 1.0, your draft’s “Tag version” would be v1.0.
-## Push some commits. Every CI build will update the artifacts attached to this draft.
-### Once you are done, publish the release. GitHub will tag the latest commit for you
+## Update the version of the app :
+npm version {major|minor|patch}
+
+## Build and publish the app :
 npm run build:publish
 
+## On Github, publish the latest draft realease
 ```
 
 ---

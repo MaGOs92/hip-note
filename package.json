@@ -10,7 +10,7 @@
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
-    "build:publish": "node .electron-vue/build.js && electron-builder -p onTagOrDraft",
+    "build:publish": "node .electron-vue/build.js && electron-builder -p always",
     "dev": "node .electron-vue/dev-runner.js",
     "watch": "cross-env BUILD_TARGET=web node .electron-vue/dev-runner.js",
     "lint": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter src",
