@@ -34,6 +34,7 @@
 <style scoped>
 @import '~/node_modules/codemirror/lib/codemirror.css';
 @import '~/node_modules/highlight.js/styles/github.css';
+@import '../../assets/style.css';
 
 #editor {
   height: calc(100vh - 64px);
