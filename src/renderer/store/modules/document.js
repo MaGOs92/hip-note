@@ -39,6 +39,16 @@ const actions = {
     commit('setCurDocument', newDocument);
     commit('setIsLoaded', true);
   },
+  DUPLICATE_CUR_DOCUMENT({ state, commit }) {
+    const newDocument = {
+      ...state.curDocument,
+      id: shortid.generate(),
+      created: new Date(),
+      title: `Copie - ${state.curDocument.title}`,
+    };
+    commit('setCurDocument', newDocument);
+    commit('setIsLoaded', true);
+  },
   async SAVE_DOCUMENT({ commit }, document) {
     commit('setIsSaved', false);
     commit('setCurDocument', document);

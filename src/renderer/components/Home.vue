@@ -99,15 +99,40 @@
             <td>{{ props.item.created | dateFormated }}</td>
             <td>{{ props.item.lastModified | dateRelative }}</td>
             <td>
-              <v-icon @click.stop="toggleFav($event, props.item)">{{
-                props.item.isFav | favIcon
-              }}</v-icon>
+              <v-btn 
+                icon 
+                class="action-button"
+                @click.stop="toggleFav($event, props.item)">
+                <v-icon>{{
+                  props.item.isFav | favIcon
+                }}</v-icon>
+              </v-btn>
+              
             </td>
             <td>
-              <v-icon 
-                @click.stop="() => showDeleteDialog(props.item)"
-              >delete</v-icon
-              >
+              <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-bind="attrs"
+                    class="action-button"
+                    icon
+                    @click.stop
+                    v-on="on"
+                  ><v-icon>more_vert</v-icon></v-btn
+                  >
+                </template>
+                <v-list>
+                  <v-list-tile
+                    v-for="(action, index) in actionsMenu"
+                    :key="index"
+                    class="menu-tile"
+                    @click="() => action.callback(props.item)"
+                  >
+                    <v-icon>{{ action.icon }}</v-icon>
+                    <span>{{ action.text }}</span>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
             </td>
           </tr>
         </template>
@@ -179,16 +204,26 @@
 .filter-tags-input {
   width: 40%;
 }
+.action-button {
+  color: rgba(0, 0, 0, 0.54);
+}
+.menu-tile span {
+  font-size: small;
+}
+.menu-tile i {
+  margin-right: 8px;
+  font-size: small;
+}
 </style>
 
 <script>
-import CommonMixins from "./../mixins/commonMixins";
+import CommonMixins from './../mixins/commonMixins';
 
 export default {
-  name: "Home",
+  name: 'Home',
   filters: {
     favIcon(isFav) {
-      return isFav ? "star" : "star_border";
+      return isFav ? 'star' : 'star_border';
     },
   },
   mixins: [CommonMixins],
@@ -198,38 +233,61 @@ export default {
       documentToDelete: null,
       headers: [
         {
-          text: "Titre",
-          value: "title",
-          align: "left",
+          text: 'Titre',
+          value: 'title',
+          align: 'left',
         },
         {
-          text: "Tags",
-          value: "tags",
-          align: "left",
+          text: 'Tags',
+          value: 'tags',
+          align: 'left',
         },
         {
-          text: "Création",
-          value: "created",
-          align: "left",
+          text: 'Création',
+          value: 'created',
+          align: 'left',
         },
         {
-          text: "Dernière modification",
-          value: "lastModified",
-          align: "left",
+          text: 'Dernière modification',
+          value: 'lastModified',
+          align: 'left',
         },
         {
-          text: "Favori",
-          value: "isFav",
-          align: "left",
+          text: 'Favori',
+          value: 'isFav',
+          align: 'left',
         },
         {
-          text: "Actions",
-          value: "actions",
-          align: "left",
+          text: 'Actions',
+          value: 'actions',
+          align: 'left',
+          sortable: false,
+        },
+      ],
+      actionsMenu: [
+        {
+          text: 'Dupliquer',
+          icon: 'content_copy',
+          callback: async ({ id }) => {
+            await this.$store.dispatch('GET_DOCUMENT', id);
+            this.$store.dispatch('DUPLICATE_CUR_DOCUMENT');
+            const duplicatedDocument = this.$store.state.document.curDocument;
+            await this.$store.dispatch('SAVE_DOCUMENT', duplicatedDocument);
+            this.navigate('/editor', { id: duplicatedDocument.id });
+          },
+        },
+        {
+          text: 'Supprimer',
+          icon: 'delete',
+          callback: (document) => {
+            this.deleteDialog = true;
+            this.documentToDelete = document;
+          },
+          color: 'danger',
         },
       ],
       isLoading: true,
-      search: "",
+      search: '',
     };
   },
   computed: {
@@ -239,30 +297,30 @@ export default {
       );
     },
     tags() {
-      return this.$store.state.tag.allTags
+      return this.$store.state.tag.allTags;
     },
     titleFilter: {
       get() {
-        return this.$store.state.home.filters.title
+        return this.$store.state.home.filters.title;
       },
       set(title) {
-        this.$store.dispatch("SET_FILTERS", {
+        this.$store.dispatch('SET_FILTERS', {
           ...this.$store.state.home.filters,
           title,
         });
-      }
+      },
     },
     tagsFilter: {
       get() {
-        return this.$store.state.home.filters.tags
+        return this.$store.state.home.filters.tags;
       },
       set(tags) {
-        this.$store.dispatch("SET_FILTERS", {
+        this.$store.dispatch('SET_FILTERS', {
           ...this.$store.state.home.filters,
           tags,
         });
-      }
-    }
+      },
+    },
   },
   beforeMount() {
     return this.fetchData();
@@ -270,8 +328,8 @@ export default {
   methods: {
     async fetchData() {
       this.isLoading = true;
-      await this.$store.dispatch("GET_TAGS");
-      await this.$store.dispatch("LIST_ALL_DOCUMENTS");
+      await this.$store.dispatch('GET_TAGS');
+      await this.$store.dispatch('LIST_ALL_DOCUMENTS');
       this.isLoading = false;
     },
     toggleFav(event, document) {
@@ -279,49 +337,46 @@ export default {
         ...document,
         isFav: !document.isFav,
       };
-      this.$store.dispatch("UPDATE_ALL_DOCUMENTS", newDocument);
-      this.$store.dispatch("SAVE_DOCUMENT", newDocument);
-    },
-    showDeleteDialog(document) {
-      this.deleteDialog = true
-      this.documentToDelete = document
+      this.$store.dispatch('UPDATE_ALL_DOCUMENTS', newDocument);
+      this.$store.dispatch('SAVE_DOCUMENT', newDocument);
     },
     hideDeleteDialog() {
-      this.documentToDelete = null
-      this.deleteDialog = false
+      this.documentToDelete = null;
+      this.deleteDialog = false;
     },
     async deleteDocument() {
       const newDocument = {
         ...this.documentToDelete,
         deleted: true,
       };
-      await this.$store.dispatch("UPDATE_ALL_DOCUMENTS", newDocument);
-      this.hideDeleteDialog()
-      await this.$store.dispatch("SAVE_DOCUMENT", newDocument);
+      await this.$store.dispatch('UPDATE_ALL_DOCUMENTS', newDocument);
+      this.hideDeleteDialog();
+      await this.$store.dispatch('SAVE_DOCUMENT', newDocument);
     },
     filteredDocuments(documents) {
       return documents
         .filter(({ tags }) => {
           if (this.tagsFilter && this.tagsFilter.length > 0) {
-            return this.tagsFilter.some((tagFilter) => tags.indexOf(tagFilter) > -1)
+            return this.tagsFilter.some(
+              (tagFilter) => tags.indexOf(tagFilter) > -1
+            );
           }
 
-          return true
+          return true;
         })
         .filter(({ title }) => {
           if (this.titleFilter) {
-            return title.toLowerCase().includes(this.titleFilter.toLowerCase())
+            return title.toLowerCase().includes(this.titleFilter.toLowerCase());
           }
 
-          return true
-        })
+          return true;
+        });
     },
     removeTag({ id }) {
       const tags = [...this.tagsFilter];
       tags.splice(this.tagsFilter.indexOf(id), 1);
-      this.tagsFilter = tags
+      this.tagsFilter = tags;
     },
   },
 };
 </script>
-
